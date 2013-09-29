@@ -1,6 +1,8 @@
 import re
 from datetime import datetime
+from datetime import timedelta
 import valideer
+import timestring
 
 
 class CreditCard(object):
@@ -8,8 +10,8 @@ class CreditCard(object):
                                  "+expires": datetime,
                                  "+number": valideer.Pattern(r"^\d{15,16}$"),
                                  "cvv": valideer.String(max_length=41),
-                                 "track1": valideer.Pattern(r"^B\d{0,19}\^[\w\s\/]{2,26}\^\d{7}\w*$"),
-                                 "track2": valideer.Pattern(r"\d{0,19}=\d{7}\w*"),
+                                 "track1": valideer.Pattern(r"^%B\d{0,19}\^[\w\s\/]{2,26}\^\d{7}\w*\?$"),
+                                 "track2": valideer.Pattern(r";\d{0,19}=\d{7}\w*\?"),
                                  "zip":  valideer.String(max_length=10)})
     _CARD_BRANDS = {"Visa": re.compile(r"/^4[0-9]{12}(?:[0-9]{3})?$/"),
                     "Mastercard": re.compile(r"/^5[1-5][0-9]{14}$/"),
@@ -21,10 +23,17 @@ class CreditCard(object):
                re.compile(r";\d{0,19}=\d{7}\w*\?")]
 
     def __init__(self, **kwargs):
-        self._number = str(kwargs.get('number'))
-        self._track1 = str(kwargs.get('track1'))
-        self._track2 = str(kwargs.get('track2'))
-        self._expires = datetime.strptime(kwargs.get('expires'), "%y%m") if kwargs.get('expires') else None
+        self._number = kwargs.get('number')
+        self._track1 = kwargs.get('track1')
+        self._track2 = kwargs.get('track2')
+        try:
+            self._expires = datetime.strptime(kwargs.get('expires'), "%y%m")
+        except ValueError:
+            try:
+                self._expires = timestring.Date(kwargs.get('expires')).date
+            except ValueError:
+                self._expires = None
+
         self._name = kwargs.get('name')
         self._zip = kwargs.get('zip')
         self._cvv = kwargs.get('cvv')
@@ -38,15 +47,15 @@ class CreditCard(object):
 
     @property
     def number(self):
-        return self._number
+        return str(self._number) if self._number else None
 
     @property
     def track1(self):
-        return self._track1
+        return str(self._track1) if self._track1 else None
 
     @property
     def track2(self):
-        return self._track2
+        return str(self._track2) if self._track2 else None
 
     @property
     def expires(self):
@@ -54,11 +63,15 @@ class CreditCard(object):
 
     @property
     def cvv(self):
-        return self._cvv
+        return str(self._cvv) if self._cvv else None
 
     @property
     def zip(self):
-        return self._zip
+        return str(self._zip) if self._zip else None
+
+    @property
+    def name(self):
+        return str(self._name) if self._name else None
 
     @property
     def brand(self):
@@ -66,6 +79,10 @@ class CreditCard(object):
             if brand[1].match(self.number):
                 return brand[0]
         return "Gift"
+
+    @property
+    def expired(self):
+        return datetime.now() < (self.expires + timedelta(month=1))
 
     @classmethod
     def from_swipe(self, swipe):
