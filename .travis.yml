@@ -3,4 +3,5 @@ python:
   - "2.7"
   - "pypy"
 script:
+  - pip install tornado
   - python -m stuffed.tests
