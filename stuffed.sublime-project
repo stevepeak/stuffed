@@ -4,5 +4,13 @@
 		{
 			"path": "/Users/peak/Sites/site-packages/stuffed"
 		}
+	],
+	"build_systems":
+	[
+		{
+			"name": "Run Tests",
+			"working_dir": "$project_path",
+			"cmd": ["make", "test"]
+		}
 	]
 }
