@@ -1,8 +1,7 @@
 from setuptools import setup
-from stuffed import version
 
 setup(name='stuffed',
-      version=version,
+      version='0.0.2',
       description="All your belongings",
       long_description="",
       classifiers=["Development Status :: 1 - Planning",
@@ -19,5 +18,8 @@ setup(name='stuffed',
       packages=['stuffed'],
       include_package_data=True,
       zip_safe=True,
-      install_requires=[i.strip() for i in open("requirements.txt").readlines()],
+      install_requires=["valideer==0.3",
+                        "requests==2.0.0",
+                        "timestring==1.4.4",
+                        "pytz==2013b"],
       entry_points="")
