@@ -23,16 +23,27 @@ class CreditCard(object):
                re.compile(r";\d{0,19}=\d{7}\w*\?")]
 
     def __init__(self, **kwargs):
+        if kwargs.get('swipe'):
+            # decode swipe
+            tracks = re.split(r"[\t\n]", kwargs.get('swipe'))
+            kwargs.update(dict(number=re.search(r"\d+", tracks[0]).group(),
+                               track1=tracks[0],
+                               track2=tracks[1],
+                               expires=re.search(r"\^(\d{4})", tracks[0]).group()[1:],
+                               name=re.search(r"\^([^\s]+)", tracks[0]).group()[1:]))
         self._number = kwargs.get('number')
         self._track1 = kwargs.get('track1')
         self._track2 = kwargs.get('track2')
-        try:
-            self._expires = datetime.strptime(kwargs.get('expires'), "%y%m")
-        except ValueError:
+        if not isinstance(kwargs.get('expires'), datetime):
             try:
-                self._expires = timestring.Date(kwargs.get('expires')).date
+                self._expires = datetime.strptime(kwargs.get('expires'), "%y%m")
             except ValueError:
-                self._expires = None
+                try:
+                    self._expires = timestring.Date(kwargs.get('expires')).date
+                except ValueError:
+                    error = valideer.ValidationError("Failed to parse expiration date")
+                    error.add_context('expires')
+                    raise error
 
         self._name = kwargs.get('name')
         self._zip = kwargs.get('zip')
