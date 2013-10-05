@@ -32,6 +32,7 @@ class CreditCard(object):
                                expires=re.search(r"\^(\d{4})", tracks[0]).group()[1:],
                                name=re.search(r"\^([^\s]+)", tracks[0]).group()[1:]))
         self._number = kwargs.get('number')
+        self._swipe = kwargs.get('swipe')
         self._track1 = kwargs.get('track1')
         self._track2 = kwargs.get('track2')
         if not isinstance(kwargs.get('expires'), datetime):
@@ -59,6 +60,10 @@ class CreditCard(object):
     @property
     def number(self):
         return str(self._number) if self._number else None
+
+    @property
+    def swipe(self):
+        return self._swipe
 
     @property
     def track1(self):
