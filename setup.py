@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(name='stuffed',
-      version='0.0.2',
+      version='0.0.3',
       description="All your belongings",
       long_description="",
       classifiers=["Development Status :: 1 - Planning",
