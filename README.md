@@ -1,6 +1,7 @@
 # Stuffed
 
 [![Build Status](https://secure.travis-ci.org/stevepeak/stuffed.png)](http://travis-ci.org/stevepeak/stuffed)
+[![codecov.io](https://codecov.io/github/stevepeak/stuffed/coverage.svg?branch=master)](https://codecov.io/github/stevepeak/stuffed?branch=master)
 
 ## CreditCard
 
