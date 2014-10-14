@@ -4,4 +4,6 @@ python:
   - "pypy"
 script:
   - pip install tornado
-  - python -m stuffed.tests
+  - coverage run -m stuffed.tests
+after_success: codecov
+install: pip install codecov
