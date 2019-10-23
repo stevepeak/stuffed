@@ -19,7 +19,7 @@ setup(name='stuffed',
       include_package_data=True,
       zip_safe=True,
       install_requires=["valideer==0.3",
-                        "requests==2.0.0",
+                        "requests==2.20.0",
                         "timestring==1.4.4",
                         "pytz==2013b"],
       entry_points="")

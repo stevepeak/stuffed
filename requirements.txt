@@ -1,4 +1,4 @@
 valideer==0.3
-requests==2.0.0
+requests==2.20.0
 timestring==1.4.3
 pytz==2013b
